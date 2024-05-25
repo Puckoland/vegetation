@@ -18,11 +18,20 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from drf_yasg.generators import OpenAPISchemaGenerator
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
 API_PREFIX = 'api/v1/'
+
+
+class BothHttpAndHttpsSchemaGenerator(OpenAPISchemaGenerator):
+    def get_schema(self, request=None, public=False):
+        schema = super().get_schema(request, public)
+        schema.schemes = ["https", "http"]
+        return schema
+
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -32,6 +41,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(url="https://github.com/revolko"),
         license=openapi.License(name="MIT License"),
     ),
+    generator_class=BothHttpAndHttpsSchemaGenerator,
     public=True,
     permission_classes=(permissions.AllowAny,),
 )
