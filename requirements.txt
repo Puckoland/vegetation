@@ -7,3 +7,4 @@ typing_extensions==4.7.1
 python-dotenv==1.0.0
 psycopg==3.1.12
 drf-yasg==1.21.7
+azure-servicebus==7.0.0

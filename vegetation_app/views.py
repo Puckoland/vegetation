@@ -4,13 +4,15 @@ from rest_framework.permissions import IsAuthenticated
 from .models import Plant
 from .serializers import PlantSerializer
 
+from .azure_bus import send_plant
+
 
 class PlantList(ListCreateAPIView):
     serializer_class = PlantSerializer
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        send_plant(serializer.data)
 
     def get_queryset(self):
         return Plant.objects.filter(owner=self.request.user)
